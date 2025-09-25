@@ -26,7 +26,3 @@ Repositorio personal para el **segundo año de DAM** con ejercicios, prácticas 
 - `docs/` — Apuntes y material de referencia en Markdown.
 - `ejercicios/` — Ejercicios por tema.
 - `practicas/` — Prácticas guiadas y proyectos pequeños.
-
----
-
-**Nota:** Este README resume el contenido del curso y la organización del repositorio. No entra en detalle de código específico.
