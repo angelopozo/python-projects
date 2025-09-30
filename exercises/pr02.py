@@ -50,7 +50,7 @@ def showRegisters():
     
     for name, (in_hour, out_hour) in schedules.items():
         print(f"{name}: Entry at {in_hour}:00, Exit at {out_hour}:00")
-    
+        
 def countEntries():
     print(f"\nTotal employee entries: {len(schedules)}")
 

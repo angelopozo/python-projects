@@ -1,12 +1,12 @@
-def askNumber(mensaje, minimo=None, maximo=None):
+def askNumber(mensaje, minimum=None, maximum=None):
     while True:
         try:
             valor = int(input(mensaje))
-            if minimo is not None and valor < minimo:
-                print(f"The value must be at least: {minimo}.")
+            if minimum is not None and valor < minimum:
+                print(f"The value must be at least: {minimum}.")
                 continue
-            if maximo is not None and valor > maximo:
-                print(f"The value must be at most: {maximo}.")
+            if maximum is not None and valor > maximum:
+                print(f"The value must be at most: {maximum}.")
                 continue
             return valor
         except:
@@ -17,8 +17,8 @@ def main():
     print("Employee registration and schedules - Program 01")
     print("================================================\n")
 
-    num_emp = askNumber("How many employees will you enter? ", minimo=1)
-    ref_hour = askNumber("Enter the reference hour (0-23): ", minimo=0, maximo=23)
+    num_emp = askNumber("How many employees will you enter? ", minimum=1)
+    ref_hour = askNumber("Enter the reference hour (0-23): ", minimum=0, maximum=23)
 
     early_count = 0
     earliest_out = 24
@@ -27,8 +27,8 @@ def main():
     i = 0
     while i < num_emp:
         name = input(f"Name of employee #{i+1}: ").strip()
-        in_hour = askNumber(f"Entry hour for {name} (0-22): ", minimo=0, maximo=22)
-        out_hour = askNumber(f"Exit hour for {name} (0-23): ", minimo=0, maximo=23)
+        in_hour = askNumber(f"Entry hour for {name} (0-22): ", minimum=0, maximum=22)
+        out_hour = askNumber(f"Exit hour for {name} (0-23): ", minimum=0, maximum=23)
 
         if out_hour <= in_hour:
             print("Exit hour must be greater than entry hour. Try again.")
