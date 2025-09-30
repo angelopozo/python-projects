@@ -1,24 +1,25 @@
 schedules = {
-    'María':  ('08', '16'),
-    'Juan':   ('09', '17'),
-    'Lucía':  ('07', '15'),
-    'Diego':  ('10', '18'),
-    'Ana':    ('08', '14'),
-    'Raúl':   ('12', '20'),
-    'Sofía':  ('11', '19'),
-    'Carlos': ('06', '14'),
-    'Elena':  ('13', '21'),
-    'Luis':   ('09', '17'),
-    'Marta':  ('10', '18'),
-    'Javier': ('08', '16'),
-    'Carmen': ('07', '15'),
-    'Pedro':  ('12', '20'),
-    'Laura':  ('11', '19'),
-    'Sergio': ('06', '14'),
-    'Isabel': ('13', '21'),
-    'Alberto':('09', '17'),
-    'Nuria':  ('10', '18'),
+    'María':  ('08:32', '16:12'),
+    'Juan':   ('09:59', '17:44'),
+    'Lucía':  ('07:10', '15:25'),
+    'Diego':  ('10:15', '18:05'),
+    'Ana':    ('08:50', '14:38'),
+    'Raúl':   ('12:03', '20:22'),
+    'Sofía':  ('11:06', '19:47'),
+    'Carlos': ('06:09', '14:11'),
+    'Elena':  ('13:29', '21:37'),
+    'Luis':   ('09:12', '17:13'),
+    'Marta':  ('10:47', '18:55'),
+    'Javier': ('08:08', '16:30'),
+    'Carmen': ('07:45', '15:50'),
+    'Pedro':  ('12:20', '20:15'),
+    'Laura':  ('11:35', '19:05'),
+    'Sergio': ('06:34', '14:47'),
+    'Isabel': ('13:22', '21:09'),
+    'Alberto':('09:37', '17:24'),
+    'Nuria':  ('10:40', '18:11'),
 }
+
 
 def menu():
     """
@@ -49,11 +50,22 @@ def showRegisters():
     print("\nEmployee Schedules:")
     
     for name, (in_hour, out_hour) in schedules.items():
-        print(f"{name}: Entry at {in_hour}:00, Exit at {out_hour}:00")
-        
+        if (validateHour(in_hour) and validateHour(out_hour)):
+            print(f"{name}: Entry at {in_hour}, Exit at {out_hour}")
+            
 def countEntries():
     print(f"\nTotal employee entries: {len(schedules)}")
 
+
+def validateHour(hour):
+    try:
+        h, m = map(int, hour.split(':'))
+        if 0 <= h < 24 and 0 <= m < 60:
+            return True
+        else:
+            return False
+    except:
+        return False
 # ---------------------------------------------------------------------------
 # 4) Punto de entrada
 # ---------------------------------------------------------------------------
@@ -61,6 +73,4 @@ if __name__ == '__main__':
     # Consejo de depuración: descomenta las dos líneas siguientes para pausar en este punto
     # import debugpy
     # debugpy.breakpoint()
- 
     menu()
- 
