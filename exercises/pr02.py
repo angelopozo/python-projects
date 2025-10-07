@@ -1,4 +1,4 @@
-schedules = {
+hardcoded_schedules = {
     'María':  ('08:32', '16:12'),
     'Juan':   ('09:59', '17:44'),
     'Lucía':  ('07:10', '15:25'),
@@ -19,7 +19,6 @@ schedules = {
     'Alberto':('09:37', '17:24'),
     'Nuria':  ('10:40', '18:11'),
 }
-
 
 def menu():
     """
@@ -46,21 +45,44 @@ def menu():
             case _:
                 print("Invalid option. Please try again.\n")
 
-
 def showRegisters():
     print("\nEmployee Schedules:")
     
-    for name, (in_hour, out_hour) in schedules.items():
+    for name, (in_hour, out_hour) in hardcoded_schedules.items():
         if (validateHour(in_hour) and validateHour(out_hour)):
             print(f"{name}: Entry at {in_hour}, Exit at {out_hour}")
         else:
             print(f"{name}: Invalid schedule ({in_hour} - {out_hour})");
-            
+
 def countEntries():
-    print(f"\nTotal employee entries: {len(schedules)}")
+        name = input("Introduce the employee's name: ")
+        
+        while True:
+            in_hour = input("Introduce the check-in hour (HH:MM): ")
+            
+            if (validateHour(in_hour)):
+                break;
+            else:
+                print("Invalid hour. Please, try again.")
+        
+        while True:
+            out_hour = input("Introduce the check-out hour (HH:MM): ")
+            
+            if (validateHour(out_hour) and to_minutes(out_hour) > to_minutes(in_hour)):
+                break;
+            else:
+                print("Invalid hour. It must be a valid hour and later than the check-in time. Please, try again.")
+        
+        hardcoded_schedules[name] = (in_hour, out_hour)
+        
+        if(validateHour(in_hour) and validateHour(out_hour)):
+            print(f"\nTotal employee entries: {len(hardcoded_schedules)}")
 
+def to_minutes(hour: str) -> int:
+    h, m = map(int, hour.split(':'))
+    return h * 60 + m
 
-def validateHour(hour) -> bool:
+def validateHour(hour: str) -> bool:
     try:
         h, m = map(int, hour.split(':'))
         if 0 <= h < 24 and 0 <= m < 60:
@@ -69,6 +91,7 @@ def validateHour(hour) -> bool:
             return False
     except ValueError:
         return False
+
 # ---------------------------------------------------------------------------
 # 4) Punto de entrada
 # ---------------------------------------------------------------------------
