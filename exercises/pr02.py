@@ -33,17 +33,18 @@ def menu():
         print("1) Show registers")
         print("2) Count entries")
         print("3) Exit")
-        opcion = input("Choose an option (1-3): ").strip()
+        option = input("Choose an option (1-3): ").strip()
 
-        if opcion == '1':
-            showRegisters()
-        elif opcion == '2':
-            countEntries()
-        elif opcion == '3':
-            print("Exiting the program.")
-            break
-        else:
-            print("Invalid option. Please try again.\n")
+        match option:
+            case '1':
+                showRegisters()
+            case '2':
+                countEntries()
+            case '3':
+                print("Exiting the program.")
+                break
+            case _:
+                print("Invalid option. Please try again.\n")
 
 
 def showRegisters():
@@ -52,19 +53,21 @@ def showRegisters():
     for name, (in_hour, out_hour) in schedules.items():
         if (validateHour(in_hour) and validateHour(out_hour)):
             print(f"{name}: Entry at {in_hour}, Exit at {out_hour}")
+        else:
+            print(f"{name}: Invalid schedule ({in_hour} - {out_hour})");
             
 def countEntries():
     print(f"\nTotal employee entries: {len(schedules)}")
 
 
-def validateHour(hour):
+def validateHour(hour) -> bool:
     try:
         h, m = map(int, hour.split(':'))
         if 0 <= h < 24 and 0 <= m < 60:
             return True
         else:
             return False
-    except:
+    except ValueError:
         return False
 # ---------------------------------------------------------------------------
 # 4) Punto de entrada
