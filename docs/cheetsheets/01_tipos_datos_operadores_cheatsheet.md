@@ -12,10 +12,10 @@ type(x)  # Devuelve el tipo
 
 ### Ejemplo:
 ```python
-a = 42        # int
-b = 3.14      # float
-c = True      # bool
-d = "Hola"    # str
+a = 42
+b = 3.14
+c = True
+d = "Hola"
 ```
 
 ## ➕ Operadores aritméticos
@@ -30,8 +30,6 @@ d = "Hola"    # str
 | `**`     | Potencia            | `10 ** 3`  | 1000      |
 
 ## ⚖️ Operadores de comparación
-Devuelven `True` o `False`.
-
 | Operador | Ejemplo       | Resultado |
 |----------|---------------|-----------|
 | `==`     | `5 == 5`      | `True`    |
@@ -55,17 +53,16 @@ Devuelven `True` o `False`.
 a = [1, 2, 3]
 b = a
 c = [1, 2, 3]
-
 print(a is b)   # True
 print(a is c)   # False
 print(2 in a)   # True
 ```
 
-## 🔄 Casting (conversiones)
+## 🔄 Casting
 ```python
-int("10")    # 10
-str(3.14)    # "3.14"
-int(3.99)    # 3
+int("10")
+str(3.14)
+int(3.99)
 ```
 
 ## ⌨️ Entrada y salida
@@ -76,4 +73,4 @@ print("Hola", nombre, "tienes", edad, "años.")
 ```
 
 ## 📌 Tip rápido
-Usa `help()` o `dir()` para explorar funciones y métodos disponibles.
+Usa help() o dir() para explorar funciones y métodos disponibles.
