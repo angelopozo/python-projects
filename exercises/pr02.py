@@ -1,5 +1,6 @@
 import os, json
 
+# Program to manage employee schedules
 def menu():
     if not os.path.exists('data/pr02.json'):
         with open('data/pr02.json', 'w', encoding='utf-8') as f:
@@ -36,6 +37,7 @@ def menu():
             case _:
                 print("Invalid option. Please try again.\n")
 
+# Method for show registers
 def showRegisters(schedules: dict):
     if not schedules:
         print ("No employee schedules found.")
@@ -48,6 +50,7 @@ def showRegisters(schedules: dict):
         else:
             print(f"{name}: Invalid schedule ({in_hour} - {out_hour})")
 
+# Method for count entries
 def countEntries(schedules: dict):
     if not schedules:
         print("No employee schedules found.")
@@ -67,8 +70,11 @@ def countEntries(schedules: dict):
             count+= 1
     
     print(f"\nTotal employee entries before {hour}: {count}")
-    
+
+# Method for insert a new register
 def insertRegister(schedules: dict):
+    print("========== EMPLOYEE SCHEDULES INSERT ==========")
+
     name = input("Introduce the employee's name: ")
 
     while True:
@@ -92,10 +98,12 @@ def insertRegister(schedules: dict):
         
     print(f"Register for {name} added successfully.")
 
+# Method to convert hour string to minutes
 def to_minutes(hour: str) -> int:
     h, m = map(int, hour.split(':'))
     return h * 60 + m
 
+# Method to validate hour format HH:MM
 def validateHour(hour: str) -> bool:
     try:
         h, m = map(int, hour.split(':'))
