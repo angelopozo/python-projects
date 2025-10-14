@@ -33,7 +33,11 @@ def menu():
                 print("Invalid option. Please try again.\n")
 
 def showRegisters(schedules: dict):
-    print("\nEmployee Schedules:")
+    if not schedules:
+        print ("No employee schedules found.")
+        return
+    
+    print("========== EMPLOYEE SCHEDULES ==========")
     for name, (in_hour, out_hour) in schedules.items():
         if validateHour(in_hour) and validateHour(out_hour):
             print(f"{name}: Entry at {in_hour}, Exit at {out_hour}")
