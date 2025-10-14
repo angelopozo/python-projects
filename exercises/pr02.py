@@ -12,14 +12,16 @@ def menu():
     Menú principal repetitivo (bucle while) para elegir acciones:
     1) Mostrar registros
     2) Contar entradas
-    3) Salir
+    3) Insertar un nuevo registro
+    4) Salir
     """
     while True:
         print("========== MENÚ ==========")
         print("1) Show registers")
         print("2) Count entries")
-        print("3) Exit")
-        option = input("Choose an option (1-3): ").strip()
+        print("3) Insert a new register")
+        print("4) Exit")
+        option = input("Choose an option (1-4): ").strip()
 
         match option:
             case '1':
@@ -27,6 +29,8 @@ def menu():
             case '2':
                 countEntries(schedules)
             case '3':
+                insertRegister(schedules)
+            case '4':
                 print("Exiting the program.")
                 break
             case _:
@@ -45,6 +49,26 @@ def showRegisters(schedules: dict):
             print(f"{name}: Invalid schedule ({in_hour} - {out_hour})")
 
 def countEntries(schedules: dict):
+    if not schedules:
+        print("No employee schedules found.")
+        return
+    
+    print("========== EMPLOYEE SCHEDULES COUNT ==========")
+    while True:
+        hour = input("Introduce the maximum hour (HH:MM): ")
+        if validateHour(hour):
+            break
+        else:
+            print("Invalid hour. It must be a valid hour. Please, try again.")
+
+    count = 0
+    for name, (in_hour, out_hour) in schedules.items():
+        if to_minutes(in_hour) < to_minutes(hour):
+            count+= 1
+    
+    print(f"\nTotal employee entries before {hour}: {count}")
+    
+def insertRegister(schedules: dict):
     name = input("Introduce the employee's name: ")
 
     while True:
@@ -65,8 +89,8 @@ def countEntries(schedules: dict):
     
     with open('data/pr02.json', 'w', encoding='utf-8') as f:
         json.dump(schedules, f, ensure_ascii=False, indent=4)
-
-    print(f"\nTotal employee entries: {len(schedules)}")
+        
+    print(f"Register for {name} added successfully.")
 
 def to_minutes(hour: str) -> int:
     h, m = map(int, hour.split(':'))
