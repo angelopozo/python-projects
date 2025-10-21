@@ -15,7 +15,7 @@ def menu():
     return input("Seleccione una opción: ")
 
 def earlierEmployees(registers, reference_hour=8):
-    """Encuentra empleados que comienzan antes de la hora de referencia"""
+    print(f"Encuentra empleados que comienzan antes de la hora de referencia {reference_hour}:00")
     earliers = set()
     earliers_register = []
 
@@ -29,16 +29,16 @@ def earlierEmployees(registers, reference_hour=8):
         writer.writerow(['employee', 'check_in'])
 
         for employee in sorted(earliers):
-            entries = [r.check_in for r in registers if r.employee == employee and r.check_in < reference_hour]
-            for entry in sorted(set(entries)):
-                writer.writerow([employee, entry])
+            checksIn = [r.check_in for r in registers if r.employee == employee and r.check_in < reference_hour]
+            for checkIn in sorted(set(checksIn)):
+                writer.writerow([employee, checkIn])
 
     print(f"Empleados madrugadores (antes de las {reference_hour}:00): {sorted(earliers)}")
     print("Archivo 'earliers.csv' generado")
     return earliers
 
 def intersectionDays(registers):
-    """Calcula empleados que trabajaron tanto lunes como viernes"""
+    print("Calcula empleados que trabajaron tanto lunes como viernes")
     monday_employees = {r.employee for r in registers if r.day.lower() == 'lunes'}
     friday_employees = {r.employee for r in registers if r.day.lower() == 'viernes'}
 
@@ -55,7 +55,7 @@ def intersectionDays(registers):
     return both_days_employees
 
 def exclusiveEmployees(registers):
-    """Empleados que trabajaron sábado pero NO domingo"""
+    print("Empleados que trabajaron sábado pero NO domingo")
     employees_saturday = {r.employee for r in registers if r.day.lower() == 'sábado'}
     employees_sunday = {r.employee for r in registers if r.day.lower() == 'domingo'}
 
@@ -66,7 +66,7 @@ def exclusiveEmployees(registers):
     return just_saturday_employees
 
 def weeklySummary(registers):
-    """Calcula días trabajados y horas totales por empleado"""
+    print("Calcula días trabajados y horas totales por empleado")
     employees_data = {}
 
     for register in registers:
@@ -96,18 +96,18 @@ def weeklySummary(registers):
 
     return employees_data
 
-def filterByDuration(records, min_hours=6):
-    """Empleados que trabajaron al menos X horas en TODAS sus jornadas"""
-    records_by_employee = {}
-    for record in records:
-        if record.employee not in records_by_employee:
-            records_by_employee[record.employee] = []
-        records_by_employee[record.employee].append(record)
+def filterByDuration(registers, min_hours=6):
+    print(f"Empleados que trabajaron al menos {min_hours} horas en TODAS sus jornadas")
+    registerByEmployee = {}
+    for register in registers:
+        if register.employee not in registerByEmployee:
+            registerByEmployee[register.employee] = []
+        registerByEmployee[register.employee].append(register)
 
     constant_employees = {
         employee
-        for employee, regs in records_by_employee.items()
-        if all(reg.duration() >= min_hours for reg in regs)
+        for employee, registers in registerByEmployee.items()
+        if all(register.duration() >= min_hours for register in registers)
     }
 
     print(f"Empleados que trabajaron al menos {min_hours} horas en TODAS sus jornadas:")
@@ -121,22 +121,22 @@ class Employee:
         self.name = name
         self.registers = []
 
-    def add_record(self, register):
-        """Añade un registro de horario al empleado"""
+    def addRegister(self, register):
+        print(f"Añade un registro de horario al empleado {self.name}")
         self.registers.append(register)
 
-    def total_hours(self):
-        """Calcula las horas totales trabajadas"""
+    def totalHours(self):
+        print(f"Calcula las horas totales trabajadas para {self.name}")
         return sum(register.duration() for register in self.registers)
 
-    def worked_days(self):
-        """Obtiene el número de días distintos trabajados"""
+    def workedDays(self):
+        print(f"Obtiene el número de días distintos trabajados para {self.name}")
         days = {register.day for register in self.registers}
         return len(days)
 
-    def csv_row(self):
-        """Devuelve una fila para el CSV de resumen"""
-        return [self.name, self.worked_days(), self.total_hours()]
+    def csvRow(self):
+        print(f"Devuelve una fila para el CSV de resumen para {self.name}")
+        return [self.name, self.workedDays(), self.totalHours()]
 
 class ScheduleManager:
     def __init__(self, input_file):
@@ -145,26 +145,26 @@ class ScheduleManager:
         self.registers = []
 
     def readFile(self):
-        """Lee el archivo de entrada y crea los registros"""
+        print("Lee el archivo de entrada y crea los registros")
         with open(self.input_file, newline='', encoding='utf-8') as f:
             reader = csv.reader(f, delimiter=',')
             next(reader)
 
             for row in reader:
-                name, day, h_entry, h_exit = row
-                entry = int(h_entry)
-                exit = int(h_exit)
+                name, day, check_in, check_out = row
+                check_in = int(check_in)
+                check_out = int(check_out)
 
-                register = RegisterManager(name, day, entry, exit)
+                register = RegisterManager(name, day, check_in, check_out)
                 self.registers.append(register)
 
                 if name not in self.employees:
                     self.employees[name] = Employee(name)
 
-                self.employees[name].add_record(register)
+                self.employees[name].addRegister(register)
 
     def write_summary(self, output_file):
-        """Escribe el resumen en un archivo CSV"""
+        print("Escribe el resumen en un archivo CSV")
         with open(f'data/pr03/{output_file}', 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(['empleado', 'dias_trabajados', 'horas_totales'])
@@ -173,7 +173,7 @@ class ScheduleManager:
                 writer.writerow(employee.csv_row())
 
     def generate_summary(self):
-        """Genera el resumen completo usando las clases"""
+        print("Genera el resumen utilizando clases")
         self.readFile()
         self.write_summary('classesSummary.csv')
 
@@ -191,17 +191,17 @@ class RegisterManager:
         self.check_out = check_out
 
     def duration(self) -> int:
-        """Devuelve la cantidad de horas trabajadas en este registro"""
+        print(f"Devuelve la cantidad de horas trabajadas en este registro para {self.employee}")
         return self.check_out - self.check_in
 
 with open('data/pr03.csv', newline='', encoding='utf-8') as f:
     reader = csv.reader(f, delimiter=',', quotechar='"')
     next(reader)
     for row in reader:
-        name, day, h_entry, h_exit = row
-        entry = int(h_entry)
-        exit = int(h_exit)
-        register = RegisterManager(name, day, entry, exit)
+        name, day, check_in, check_out = row
+        check_in = int(check_in)
+        check_out = int(check_out)
+        register = RegisterManager(name, day, check_in, check_out)
         registers.append(register)
 
 print(f"Se han leído {len(registers)} registros")
@@ -235,7 +235,7 @@ print("Se ha generado el fichero scheduleSummary.csv")
 
 
 def main():
-    """Función principal que ejecuta el programa con menú interactivo"""
+    print("Función principal que ejecuta el programa con menú interactivo")
     while True:
         option = menu()
 
