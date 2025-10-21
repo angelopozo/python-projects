@@ -170,7 +170,7 @@ class ScheduleManager:
             writer.writerow(['empleado', 'dias_trabajados', 'horas_totales'])
 
             for employee in sorted(self.employees.values(), key=lambda e: e.name):
-                writer.writerow(employee.csv_row())
+                writer.writerow(employee.csvRow())
 
     def generate_summary(self):
         print("Genera el resumen utilizando clases")
@@ -179,7 +179,7 @@ class ScheduleManager:
 
         print("=== RESUMEN GENERADO CON CLASES ===")
         for employee in sorted(self.employees.values(), key=lambda e: e.name):
-            print(f"{employee.name}: {employee.worked_days()} días, {employee.total_hours()} horas")
+            print(f"{employee.name}: {employee.workedDays()} días, {employee.totalHours()} horas")
 
         print("Archivo 'classesSummary.csv' generado")
 
