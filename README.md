@@ -1,6 +1,6 @@
 # DAM OPT — Python AI · Ejercicios y Apuntes
 
-Repositorio personal para el **segundo año de DAM** con ejercicios, prácticas y apuntes de **Python**. Aquí iré organizando el material del módulo optativo, incluyendo teoría breve y pequeñas prácticas guiadas.
+Repositorio personal para **segundo año de DAM** con ejercicios, prácticas y apuntes de **Python**. Aquí iré organizando el material del módulo optativo, incluyendo teoría breve y pequeñas prácticas guiadas.
 
 ## Contenidos principales
 - **Sintaxis básica y tipos de datos**
@@ -13,10 +13,6 @@ Repositorio personal para el **segundo año de DAM** con ejercicios, prácticas 
 - **POO: programa completo**
 - **Resumen**
 - **Práctica final**
-
-## Cómo usar este repositorio
-- Revisa los apuntes breves antes de cada bloque y practica con los ejercicios.
-- Las prácticas están pensadas para reforzar la teoría con casos simples y progresivos.
 
 ## Requisitos
 - Python 3.10+
