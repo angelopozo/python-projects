@@ -1,162 +1,162 @@
 import csv, os
 
 class ScheduleRecord:
-    def __init__(self, employee: str, day: str, check_in: int, check_out: int):
+    def __init__(self, employee: str, day: str, checkIn: int, checkOut: int):
         self.employee = employee
         self.day = day
-        self.check_in = check_in
-        self.check_out = check_out
+        self.checkIn = checkIn
+        self.checkOut = checkOut
 
     def duration(self) -> int:
-        return self.check_out - self.check_in
+        return self.checkOut - self.checkIn
 
 class Employee:
     def __init__(self, name):
         self.name = name
         self.records = []
     
-    def add_record(self, record):
+    def addRecord(self, record):
         self.records.append(record)
     
-    def total_hours(self):
+    def totalHours(self):
         return sum(record.duration() for record in self.records)
     
-    def worked_days(self):
+    def workedDays(self):
         days = {record.day for record in self.records}
         return len(days)
     
-    def csv_row(self):
-        return [self.name, self.worked_days(), self.total_hours()]
+    def csvRow(self):
+        return [self.name, self.workedDays(), self.totalHours()]
 
 class ScheduleManager:
-    def __init__(self, input_file):
-        self.input_file = input_file
+    def __init__(self, inputFile):
+        self.inputFile = inputFile
         self.employees = {}
         self.records = []
     
-    def read_file(self):
-        with open(self.input_file, newline='', encoding='utf-8') as f:
+    def readFile(self):
+        with open(self.inputFile, newline='', encoding='utf-8') as f:
             reader = csv.reader(f, delimiter=';', quotechar='"')
             
             for row in reader:
-                name, day, h_in, h_out = row
-                check_in = int(h_in)
-                check_out = int(h_out)
+                name, day, hIn, hOut = row
+                checkIn = int(hIn)
+                checkOut = int(hOut)
                 
-                record = ScheduleRecord(name, day, check_in, check_out)
+                record = ScheduleRecord(name, day, checkIn, checkOut)
                 self.records.append(record)
                 
                 if name not in self.employees:
                     self.employees[name] = Employee(name)
                 
-                self.employees[name].add_record(record)
+                self.employees[name].addRecord(record)
     
-    def write_summary(self, output_file):
-        with open(f'../data/pr03/{output_file}', 'w', newline='', encoding='utf-8') as f:
+    def writeSummary(self, outputFile):
+        with open(f'../data/pr03/{outputFile}', 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(['employee', 'worked_days', 'total_hours'])
             
             for employee in sorted(self.employees.values(), key=lambda e: e.name):
-                writer.writerow(employee.csv_row())
+                writer.writerow(employee.csvRow())
 
-def early_employees(records, reference_hour=8):
-    early = {r.employee for r in records if r.check_in < reference_hour}
+def earlyEmployees(records, referenceHour=8):
+    early = {r.employee for r in records if r.checkIn < referenceHour}
     
     with open('../data/pr03/early_employees.csv', 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(['employee', 'check_in_hour'])
         
         for employee in sorted(early):
-            check_ins = {r.check_in for r in records if r.employee == employee and r.check_in < reference_hour}
-            for check_in in sorted(check_ins):
-                writer.writerow([employee, check_in])
+            checkIns = {r.checkIn for r in records if r.employee == employee and r.checkIn < referenceHour}
+            for checkIn in sorted(checkIns):
+                writer.writerow([employee, checkIn])
     
-    print(f"Early employees (before {reference_hour}:00): {sorted(early)}")
+    print(f"Early employees (before {referenceHour}:00): {sorted(early)}")
     print("File '../data/pr03/early_employees.csv' has been generated.")
     return early
 
-def days_intersection(records):
-    monday_employees = {r.employee for r in records if r.day.lower() == 'lunes'}
-    friday_employees = {r.employee for r in records if r.day.lower() == 'viernes'}
+def daysIntersection(records):
+    mondayEmployees = {r.employee for r in records if r.day.lower() == 'lunes'}
+    fridayEmployees = {r.employee for r in records if r.day.lower() == 'viernes'}
     
-    both_days = monday_employees & friday_employees
+    bothDays = mondayEmployees & fridayEmployees
     
     with open('../data/pr03/two_days.csv', 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(['employee'])
-        for employee in sorted(both_days):
+        for employee in sorted(bothDays):
             writer.writerow([employee])
     
-    print(f"Employees who worked Monday AND Friday: {sorted(both_days)}")
+    print(f"Employees who worked Monday AND Friday: {sorted(bothDays)}")
     print("File '../data/pr03/two_days.csv' has been generated.")
-    return both_days
+    return bothDays
 
-def exclusive_employees(records):
-    saturday_employees = {r.employee for r in records if r.day.lower() == 'sábado'}
-    sunday_employees = {r.employee for r in records if r.day.lower() == 'domingo'}
+def exclusiveEmployees(records):
+    saturdayEmployees = {r.employee for r in records if r.day.lower() == 'sábado'}
+    sundayEmployees = {r.employee for r in records if r.day.lower() == 'domingo'}
     
-    only_saturday = saturday_employees - sunday_employees
+    onlySaturday = saturdayEmployees - sundayEmployees
     
-    print(f"Employees who worked Saturday but NOT Sunday: {sorted(only_saturday)}")
+    print(f"Employees who worked Saturday but NOT Sunday: {sorted(onlySaturday)}")
     print("Operation used: SET DIFFERENCE (saturday - sunday)")
-    return only_saturday
+    return onlySaturday
 
-def weekly_summary(records):
-    employee_data = {}
+def weeklySummary(records):
+    employeeData = {}
     
     for record in records:
-        if record.employee not in employee_data:
-            employee_data[record.employee] = {
+        if record.employee not in employeeData:
+            employeeData[record.employee] = {
                 'days': set(),
                 'total_hours': 0
             }
         
-        employee_data[record.employee]['days'].add(record.day)
-        employee_data[record.employee]['total_hours'] += record.duration()
+        employeeData[record.employee]['days'].add(record.day)
+        employeeData[record.employee]['total_hours'] += record.duration()
     
     with open('../data/pr03/weekly_summary.csv', 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(['employee', 'worked_days', 'total_hours'])
         
-        for employee in sorted(employee_data.keys()):
-            worked_days = len(employee_data[employee]['days'])
-            total_hours = employee_data[employee]['total_hours']
-            writer.writerow([employee, worked_days, total_hours])
+        for employee in sorted(employeeData.keys()):
+            workedDays = len(employeeData[employee]['days'])
+            totalHours = employeeData[employee]['total_hours']
+            writer.writerow([employee, workedDays, totalHours])
     
     print("Weekly summary:")
-    for employee in sorted(employee_data.keys()):
-        days = len(employee_data[employee]['days'])
-        hours = employee_data[employee]['total_hours']
+    for employee in sorted(employeeData.keys()):
+        days = len(employeeData[employee]['days'])
+        hours = employeeData[employee]['total_hours']
         print(f"{employee}: {days} days, {hours} hours")
     
     print("File '../data/pr03/weekly_summary.csv' has been generated.")
-    return employee_data
+    return employeeData
 
-def duration_filter(records, minimum_hours=6):
-    records_by_employee = {}
+def durationFilter(records, minimumHours=6):
+    recordsByEmployee = {}
     for record in records:
-        if record.employee not in records_by_employee:
-            records_by_employee[record.employee] = []
-        records_by_employee[record.employee].append(record)
+        if record.employee not in recordsByEmployee:
+            recordsByEmployee[record.employee] = []
+        recordsByEmployee[record.employee].append(record)
     
-    constant_employees = {
+    constantEmployees = {
         employee 
-        for employee, regs in records_by_employee.items() 
-        if all(reg.duration() >= minimum_hours for reg in regs)
+        for employee, regs in recordsByEmployee.items() 
+        if all(reg.duration() >= minimumHours for reg in regs)
     }
     
-    print(f"Employees who worked at least {minimum_hours} hours in ALL their shifts:")
-    print(sorted(constant_employees))
-    return constant_employees
+    print(f"Employees who worked at least {minimumHours} hours in ALL their shifts:")
+    print(sorted(constantEmployees))
+    return constantEmployees
 
-def use_classes_for_management():
+def useClassesForManagement():
     manager = ScheduleManager('horarios.csv')
-    manager.read_file()
-    manager.write_summary('class_summary.csv')
+    manager.readFile()
+    manager.writeSummary('class_summary.csv')
     
     print("========== CLASS-BASED SUMMARY ==========")
     for employee in sorted(manager.employees.values(), key=lambda e: e.name):
-        print(f"{employee.name}: {employee.worked_days()} days, {employee.total_hours()} hours")
+        print(f"{employee.name}: {employee.workedDays()} days, {employee.totalHours()} hours")
     
     print("File '../data/pr03/class_summary.csv' has been generated.")
 
@@ -183,73 +183,73 @@ def main():
     with open('horarios.csv', newline='', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter=';', quotechar='"')
         for row in reader:
-            name, day, h_in, h_out = row
-            check_in = int(h_in)
-            check_out = int(h_out)
-            record = ScheduleRecord(name, day, check_in, check_out)
+            name, day, hIn, hOut = row
+            checkIn = int(hIn)
+            checkOut = int(hOut)
+            record = ScheduleRecord(name, day, checkIn, checkOut)
             records.append(record)
     
     print(f"{len(records)} records have been read.\n")
     
-    employees_by_day = {}
+    employeesByDay = {}
     for record in records:
-        if record.day not in employees_by_day:
-            employees_by_day[record.day] = set()
-        employees_by_day[record.day].add(record.employee)
+        if record.day not in employeesByDay:
+            employeesByDay[record.day] = set()
+        employeesByDay[record.day].add(record.employee)
     
-    long_shift_employees = {r.employee for r in records if r.duration() >= 8}
+    longShiftEmployees = {r.employee for r in records if r.duration() >= 8}
     
-    total_hours = {}
+    totalHours = {}
     for record in records:
-        total_hours.setdefault(record.employee, 0)
-        total_hours[record.employee] += record.duration()
+        totalHours.setdefault(record.employee, 0)
+        totalHours[record.employee] += record.duration()
     
     while True:
         option = menu()
         
         if option == '1':
             print("\n========== EMPLOYEES BY DAY ==========")
-            for day, employees in employees_by_day.items():
+            for day, employees in employeesByDay.items():
                 print(f"{day}: {employees}")
         
         elif option == '2':
             print("\n========== EMPLOYEES WITH LONG SHIFTS ==========")
-            print(f"Employees with 8+ hour shifts: {long_shift_employees}")
+            print(f"Employees with 8+ hour shifts: {longShiftEmployees}")
         
         elif option == '3':
             print("\n========== BASIC SUMMARY ==========")
-            for employee, hours in sorted(total_hours.items()):
+            for employee, hours in sorted(totalHours.items()):
                 print(f"{employee}: {hours} hours")
             
             with open('../data/pr03/hours_summary.csv', 'w', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 writer.writerow(['employee', 'total_hours'])
-                for employee, total in sorted(total_hours.items()):
+                for employee, total in sorted(totalHours.items()):
                     writer.writerow([employee, total])
             
             print("File '../data/pr03/hours_summary.csv' has been generated.")
         
         elif option == '4':
             hour = input("Enter reference hour (default 8): ")
-            ref_hour = int(hour) if hour.strip() else 8
-            early_employees(records, ref_hour)
+            refHour = int(hour) if hour.strip() else 8
+            earlyEmployees(records, refHour)
         
         elif option == '5':
-            days_intersection(records)
+            daysIntersection(records)
         
         elif option == '6':
-            exclusive_employees(records)
+            exclusiveEmployees(records)
         
         elif option == '7':
-            weekly_summary(records)
+            weeklySummary(records)
         
         elif option == '8':
             hours = input("Enter minimum hours per shift (default 6): ")
-            min_hours = int(hours) if hours.strip() else 6
-            duration_filter(records, min_hours)
+            minHours = int(hours) if hours.strip() else 6
+            durationFilter(records, minHours)
         
         elif option == '9':
-            use_classes_for_management()
+            useClassesForManagement()
         
         elif option == '0':
             print("Exiting the program.")
